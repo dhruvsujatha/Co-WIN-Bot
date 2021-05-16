@@ -54,4 +54,4 @@ while True:
         if i not in ap.currentresp(data):
             l.remove(i)
     
-    time.sleep(2)
+    time.sleep(120)

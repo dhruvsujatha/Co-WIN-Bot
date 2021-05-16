@@ -70,7 +70,7 @@ class dataSel:
         available_centers = json.loads(self.resp.text)
         for center in available_centers['centers']:
             for slot in center['sessions']:
-                if (slot['available_capacity'] > 0) & (slot['min_age_limit'] == self.age):
+                if (slot['available_capacity'] > 5) & (slot['min_age_limit'] == self.age):
                     filtered_center = vaccine_center(
                         center['name'], center['address'], center['pincode'], center['block_name'], center['fee_type'], slot['available_capacity'], slot['vaccine'], slot['date'], center['from'], center['to'], slot['min_age_limit'])
                     filtered_centers['centers'].append(
