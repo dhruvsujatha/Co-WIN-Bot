@@ -24,7 +24,7 @@ def sendwebhook(data, urlss): #Send Discord Notifications as Webhooks
     print("Webook Successfully Sent to ",urlss)
     time.sleep(1)
 
-urlss = 'https://discord.com/api/webhooks/843163876488118273/keN5f6orbIL23atTyHD9S50QPH24sXNbbJY1r1qnXJ7HRREX1rlZrhZyi8UD1OLUhJiM'
+urlss = ''
 
 l = []
 
