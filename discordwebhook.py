@@ -2,11 +2,13 @@ from discord_webhook import DiscordWebhook, DiscordEmbed
 import apirequest as ap
 import time
 import json
+import os
+from dotenv import load_dotenv, find_dotenv
 
 def sendwebhook(data, urlss): #Send Discord Notifications as Webhooks
     webhook = DiscordWebhook(url=urlss) #Get Webhook URLs
-    embed = DiscordEmbed(title="New Vaccination Slot Found !", description="Here is a list of centers available", color=14973201)    
-    embed = DiscordEmbed(title="New Vaccination Slot Found !", description="Here is a list of centers available", color=14973201)    
+    embed = DiscordEmbed(title="New Vaccination Slot Found !", description="Here is a list of centers available", color=15844367)    
+    #embed = DiscordEmbed(title="New Vaccination Slot Found !", description="Here is a list of centers available", color=14973201)    
     embed.set_author(name='Dhruv Sujatha')
     embed.set_footer(text='Live data updated at')
     embed.set_timestamp()
@@ -24,7 +26,8 @@ def sendwebhook(data, urlss): #Send Discord Notifications as Webhooks
     print("Webook Successfully Sent to ",urlss)
     time.sleep(1)
 
-urlss = ''
+load_dotenv(find_dotenv())
+urlss = os.getenv('URLSS')
 
 l = []
 

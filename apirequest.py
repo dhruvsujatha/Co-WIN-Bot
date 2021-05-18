@@ -26,6 +26,21 @@ headers = {
 puburl = 'https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id='
 proturl = 'https://cdn-api.co-vin.in/api/v2/appointment/sessions/calendarByDistrict?district_id='
 
+statesmeta = 'https://cdn-api.co-vin.in/api/v2/admin/location/states'
+distmeta = 'https://cdn-api.co-vin.in/api/v2/admin/location/districts/'
+
+class metaAPI:
+    def getstates(self):
+        url = statesmeta
+        print(url)
+        resp = requests.get(url, headers = headers)
+        return resp
+    
+    def getdist(self, state_id):
+        url = distmeta+str(state_id)
+        resp = requests.get(url, headers = headers)
+        return resp
+
 class CoWinAPI:
     def publicapi(self, district_id):
         url = puburl+str(district_id)+'&date='+str(dateNeeded)
