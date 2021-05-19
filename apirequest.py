@@ -2,12 +2,17 @@ import requests
 import json
 from datetime import date
 import time
+from dotenv import load_dotenv, find_dotenv
+import os
 
 today = date.today()
 
 dateNeeded = today.strftime("%d-%m-%Y")
 
 urlss = 'https://discord.com/api/webhooks/843163876488118273/keN5f6orbIL23atTyHD9S50QPH24sXNbbJY1r1qnXJ7HRREX1rlZrhZyi8UD1OLUhJiM'
+
+load_dotenv(find_dotenv())
+auth = os.getenv('TOTALLYLEGALAUTHCODE')
 
 headers = {
         'authority': 'scrapeme.live',
@@ -20,7 +25,7 @@ headers = {
         'sec-fetch-user': '?1',
         'sec-fetch-dest': 'document',
         'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8',
-        "authorization" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiI5NWEwNGEwZS03YmNjLTQxY2QtYTBhYS00ZDU2OWRmZGNmNDMiLCJ1c2VyX2lkIjoiOTVhMDRhMGUtN2JjYy00MWNkLWEwYWEtNGQ1NjlkZmRjZjQzIiwidXNlcl90eXBlIjoiQkVORUZJQ0lBUlkiLCJtb2JpbGVfbnVtYmVyIjo5OTg2MDUwNjUxLCJiZW5lZmljaWFyeV9yZWZlcmVuY2VfaWQiOjg0NDE0NTI4MjA3NzAwLCJzZWNyZXRfa2V5IjoiYjVjYWIxNjctNzk3Ny00ZGYxLTgwMjctYTYzYWExNDRmMDRlIiwidWEiOiJNb3ppbGxhLzUuMCAoV2luZG93cyBOVCAxMC4wOyBXaW42NDsgeDY0KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvOTAuMC40NDMwLjkzIFNhZmFyaS81MzcuMzYiLCJkYXRlX21vZGlmaWVkIjoiMjAyMS0wNS0xMFQxMDoxNzoyMy4yNTBaIiwiaWF0IjoxNjIwNjQxODQzLCJleHAiOjE2MjA2NDI3NDN9.Z-maZOH1iqv3RH_VMM8y0xfcm5waXN40S-dt_-Dp0bQ",
+        "authorization" : auth,
     }
 
 puburl = 'https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id='
@@ -54,7 +59,7 @@ class CoWinAPI:
         resp = requests.get(url, headers=headers)
         return resp
 
-class vaccine_center(dict):
+class vacc(dict):
     def __init__(self, name, address, pincode, block_name, fee_type, available_capacity, vaccine, date, start, end, age):
         self.name = name
         self.address = address
@@ -76,17 +81,18 @@ class vaccine_center(dict):
 
 
 class dataSel:
-    def __init__(self, resp, age):
+    def __init__(self, resp, age = 18, min_avail = 5):
         self.resp = resp
         self.age = age
+        self.min_avail = min_avail
         
     def dataSelection(self):
         filtered_centers = {'centers': []}
         available_centers = json.loads(self.resp.text)
         for center in available_centers['centers']:
             for slot in center['sessions']:
-                if (slot['available_capacity'] > 5) & (slot['min_age_limit'] == self.age):
-                    filtered_center = vaccine_center(
+                if (slot['available_capacity'] > self.min_avail) & (slot['min_age_limit'] == self.age):
+                    filtered_center = vacc(
                         center['name'], center['address'], center['pincode'], center['block_name'], center['fee_type'], slot['available_capacity'], slot['vaccine'], slot['date'], center['from'], center['to'], slot['min_age_limit'])
                     filtered_centers['centers'].append(
                         filtered_center.asdict())
@@ -97,15 +103,3 @@ def currentresp(resp):
     for i in range(0, len(resp['centers'])):
         currresplst.append(resp['centers'][i])
     return currresplst
-
-def checkdupevals(data):
-    for i in range(0, len(data)):
-        oldname = data['centers'][i]["name"]
-        oldarea = data['centers'][i]["block_name"]
-        oldpin = data['centers'][i]["pincode"]
-        oldvacc = data['centers'][i]["vaccine"]
-        olddate = data['centers'][i]["date"]
-        oldstart = data['centers'][i]["from"]
-        oldend = data['centers'][i]["to"]
-        oldfeetype = data['centers'][i]["fee_type"]
-        oldavail = data['centers'][i]["available_capacity"]
